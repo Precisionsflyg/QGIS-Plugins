@@ -359,20 +359,23 @@ class PFCCourse:
         QgsMapLayerRegistry.instance().addMapLayer(vlayer)
         
     def getOrderedListOfSCForLeg(self,leg):
-        
+        print "Inne..."
         orderedList = []
         iter = self.selectedLayerGlobal.getFeatures()
         for feature in iter:
             # fetch geometry
             geom = feature.geometry()
             if geom.type() == QGis.Point:
+                print feature.attribute('Category')
                 if feature.attribute('Category') == 'SC':
-                    if feature.attribute('Leg') == leg:
+                    #print feature.attribute('Leg')
+                    typecastLeg = int(feature.attribute('Leg'))
+                    if typecastLeg == leg:
                         orderedList.append(feature)
-                        #print "Found Secret Checkpoint on leg: ", leg
+                        print "Found Secret Checkpoint on leg: ", leg
                     else:
                         pass
-                        #print "Wrong leg, skipping SC."
+                        print "Wrong leg, skipping SC."
             else:
                 print "Wrong Layer?"
                 
@@ -452,13 +455,15 @@ class PFCCourse:
                 output_file.write(unicode_line)
                 
                 # Get a sorted list of Secret Checkpoints for the current leg
-                legFromFeature = feature.attribute('Leg')
+                legFromFeature = int(feature.attribute('Leg'))
                 #print "legFromFeature: ", legFromFeature, "leg: ", leg
                 if legFromFeature is not NULL:
                     if leg == legFromFeature:
+                        print "Inne..."
                         listSC = self.getOrderedListOfSCForLeg(leg)
                         for sc in listSC:
                             # Write SC
+                            print "Skriver..."
                             point01 = sc.geometry().asPoint()
                             pseudoCategory = sc['Category'] + str(sc['Leg']) + '/' + str(sc['Number'])
                             line = '%s,,%f,%f\n' % (pseudoCategory, point01.y(), point01.x())
@@ -914,8 +919,7 @@ class PFCCourse:
                     calcOutbound = calcOutboundSigned
                 
                 # Get a sorted list of Secret Checkpoints for the current leg
-                legFromFeature = feature.attribute('Leg')
-                print "legFromFeature: ", legFromFeature, "leg: ", leg
+                legFromFeature = int(feature.attribute('Leg'))
                 if legFromFeature is not NULL:
                     if leg == legFromFeature:
                         listSC = self.getOrderedListOfSCForLeg(leg)
@@ -1069,8 +1073,11 @@ class PFCCourse:
 
         comboIndex = 0
         if not spcp == "":
-            #print "spcp has content: ", spcp
+            print "spcp has content: ", spcp
             comboIndex = layer_list.index(spcp) if spcp in layer_list else -1
+        #Rensa först
+        #self.sdlg.comboBoxCourselayer.clear() tillagd för att rensa droplisten, varje gång.
+        self.sdlg.comboBoxCourselayer.clear()
         self.sdlg.comboBoxCourselayer.addItems(layer_list)
         self.sdlg.comboBoxCourselayer.setCurrentIndex(comboIndex)
         
@@ -1085,11 +1092,11 @@ class PFCCourse:
             #layers = self.iface.legendInterface().layers()
             selectedLayerIndex = self.sdlg.comboBoxCourselayer.currentIndex()
             selectedLayerName = unicode(self.sdlg.comboBoxCourselayer.currentText())
-            print "Current index is: ", str(selectedLayerIndex), 'selectedLayerName: ', selectedLayerName
+            #print "Current index is: ", str(selectedLayerIndex), 'selectedLayerName: ', selectedLayerName
             #selectedLayer = actualLayersList[selectedLayerIndex]
             selectedLayer = QgsMapLayerRegistry.instance().mapLayersByName(selectedLayerName)[0]
             self.selectedLayerGlobal = selectedLayer
-            print 'Layer: ', self.selectedLayerGlobal.name()
+            #print 'Layer: ', self.selectedLayerGlobal.name()
 
             courseDirectory = self.sdlg.lineEditDirectory.text()
             proj = QgsProject.instance()
