@@ -256,12 +256,12 @@ class PFCCourse:
 
         if lineLayerNameToCheck in layer_list:
             # Already exists in the layerlegend!
-            print "Found: ", lineLayerNameToCheck
+            #print "Found: ", lineLayerNameToCheck
             return doesExistLoadedInLegend
             
         # Try to load layer if it doesn't exist in the legend
         path = self.globalCourseDirectory + "\\" + lineLayerNameToCheck + ".shp"
-        print path
+        #print path
         nameYouLike = lineLayerNameToCheck
         vlayer = QgsVectorLayer(path, nameYouLike, "ogr")
         if not vlayer.isValid():
@@ -295,12 +295,12 @@ class PFCCourse:
             if intCheck == -1: # Still not found
                 return wrongName
             else: # Found ClockWise course, let's search for a Counter ClockWise course
-                print 'Name before: ', pointLayerNameToCheck
+                #print 'Name before: ', pointLayerNameToCheck
                 pointLayerNameToCheck = pointLayerNameToCheck.replace('CW','CCW')
-                print 'Name after: ', pointLayerNameToCheck
+                #print 'Name after: ', pointLayerNameToCheck
 
         else: # Found Counter ClockWise course, let's search for a ClockWise course
-            print 'Name of CCW before: ', pointLayerNameToCheck
+            #print 'Name of CCW before: ', pointLayerNameToCheck
             pointLayerNameToCheck = pointLayerNameToCheck.replace('CCW','CW')
         
         layers = self.iface.legendInterface().layers()
@@ -312,12 +312,12 @@ class PFCCourse:
 
         if pointLayerNameToCheck in layer_list:
             # Already exists in the layerlegend!
-            print "Found: ", pointLayerNameToCheck
+            #print "Found: ", pointLayerNameToCheck
             return doesExistLoadedInLegend
             
         # Try to load layer if it doesn't exist in the legend
         path = self.globalCourseDirectory + "\\" + pointLayerNameToCheck + ".shp"
-        print path
+        #print path
         nameYouLike = pointLayerNameToCheck
         vlayer = QgsVectorLayer(path, nameYouLike, "ogr")
         if not vlayer.isValid():
@@ -459,11 +459,11 @@ class PFCCourse:
                 #print "legFromFeature: ", legFromFeature, "leg: ", leg
                 if legFromFeature is not NULL:
                     if leg == legFromFeature:
-                        print "Inne..."
+                        #print "Inne..."
                         listSC = self.getOrderedListOfSCForLeg(leg)
                         for sc in listSC:
                             # Write SC
-                            print "Skriver..."
+                            #print "Skriver..."
                             point01 = sc.geometry().asPoint()
                             pseudoCategory = sc['Category'] + str(sc['Leg']) + '/' + str(sc['Number'])
                             line = '%s,,%f,%f\n' % (pseudoCategory, point01.y(), point01.x())
@@ -1041,8 +1041,8 @@ class PFCCourse:
             selectedLayerIndex = self.dlg.comboBoxLayer.currentIndex()
             selectedLayer = layers[selectedLayerIndex]
             self.selectedLayerGlobal = selectedLayer
-            print selectedLayer
-            print self.selectedLayerGlobal
+            #print selectedLayer
+            #print self.selectedLayerGlobal
 
     def select_courses_directory(self):
         courseDirectory = str(QFileDialog.getExistingDirectory(self.sdlg, "Select Directory", self.globalCourseDirectory))
@@ -1060,7 +1060,7 @@ class PFCCourse:
         
         # See if we have a Pointlayer saved
         spcp = sp.readEntry("PFCCourse", "CoursePointlayer", "")[0]
-        print 'Updating Combo Box'
+        #print 'Updating Combo Box'
         layers = self.iface.legendInterface().layers()
         #layers = QgsMapLayerRegistry.instance().mapLayers()
         layer_list = []
@@ -1073,7 +1073,7 @@ class PFCCourse:
 
         comboIndex = 0
         if not spcp == "":
-            print "spcp has content: ", spcp
+            #print "spcp has content: ", spcp
             comboIndex = layer_list.index(spcp) if spcp in layer_list else -1
         #Rensa först
         #self.sdlg.comboBoxCourselayer.clear() tillagd för att rensa droplisten, varje gång.
@@ -1107,7 +1107,7 @@ class PFCCourse:
 
             # read values
             mytext = proj.readEntry("PFCCourse", "CourseDirectory", "C:\\")[0]
-            print mytext
+            #print mytext
 
     def updateSettings(self):
         # Global CourseDirectory
@@ -1118,7 +1118,7 @@ class PFCCourse:
 
         # Global Layer Pointer - Start with selected
         spcp = sp.readEntry("PFCCourse", "CoursePointlayer", "")[0]
-        print "CoursePointlayer from Settings: ", spcp
+        #print "CoursePointlayer from Settings: ", spcp
         if spcp == "":
             self.selectedLayerGlobal = self.iface.legendInterface().currentLayer()#Choose current instead
         else:
