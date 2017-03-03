@@ -85,10 +85,10 @@ class PFCCourse:
         # Global Layer Pointer - Start with selected
         spcp = sp.readEntry("PFCCourse", "CoursePointlayer", "")[0]
         #print "CoursePointlayer from Settings: ", spcp
-        if spcp == "":
-            self.selectedLayerGlobal = self.iface.legendInterface().currentLayer()#Choose current instead
-        else:
-            self.selectedLayerGlobal = QgsMapLayerRegistry.instance().mapLayersByName(spcp)[0]
+        #if spcp == "":
+        #    self.selectedLayerGlobal = self.iface.legendInterface().currentLayer()#Choose current instead
+        #else:
+        #    self.selectedLayerGlobal = QgsMapLayerRegistry.instance().mapLayersByName(spcp)[0]
 
         self.sdlg.lineEditDirectory.clear()
         self.sdlg.pushButtonDirectory.clicked.connect(self.select_courses_directory)
@@ -995,14 +995,14 @@ class PFCCourse:
             callback=self.createReverseCourse,
             add_to_toolbar=False,
             parent=self.iface.mainWindow())
-"""
-        self.add_action(
-            icon_path,
-            text=self.tr(u'9. Test Function'),
-            callback=self.testFunction,
-            add_to_toolbar=False,
-            parent=self.iface.mainWindow())
-"""
+
+        #self.add_action(
+            #icon_path,
+            #text=self.tr(u'9. Test Function'),
+            #callback=self.testFunction,
+            #add_to_toolbar=False,
+            #parent=self.iface.mainWindow())
+
 
     def unload(self):
         """Removes the plugin menu item and icon from QGIS GUI."""
