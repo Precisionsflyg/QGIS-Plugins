@@ -69,6 +69,9 @@ class PFCAirspace:
         self.toolbar = self.iface.addToolBar(u'PFCAirspace')
         self.toolbar.setObjectName(u'PFCAirspace')
 
+        # Global layerindex
+        self.globalLayerIndex = 0
+
     # noinspection PyMethodMayBeStatic
     def tr(self, message):
         """Get the translation for a string using Qt translation API.
@@ -260,6 +263,7 @@ class PFCAirspace:
         #Hämta valt lager
         layers = self.iface.legendInterface().layers()
         selectedLayerIndex = self.dlg.comboBoxLayer.currentIndex()
+        self.globalLayerIndex = selectedLayerIndex
         selectedLayer = layers[selectedLayerIndex]
  
         iter = selectedLayer.getFeatures()
@@ -353,7 +357,9 @@ class PFCAirspace:
         for layer in layers:
             layer_list.append(layer.name())
 
+        self.dlg.comboBoxLayer.clear()
         self.dlg.comboBoxLayer.addItems(layer_list)
+        self.dlg.comboBoxLayer.setCurrentIndex(self.globalLayerIndex)
         
         comboBoxAirspaceList = ["TMA","TMA Sector","CTR","TIZ","TIA","ATZ"]
         self.dlg.comboBoxAirspace.clear()
