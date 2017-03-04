@@ -69,6 +69,9 @@ class PrecisionFlying:
         self.toolbar = self.iface.addToolBar(u'PrecisionFlying')
         self.toolbar.setObjectName(u'PrecisionFlying')
 
+        # Global layerindex
+        self.globalLayerIndex = 0
+
     # noinspection PyMethodMayBeStatic
     def tr(self, message):
         """Get the translation for a string using Qt translation API.
@@ -180,10 +183,7 @@ class PrecisionFlying:
         del self.toolbar
 
     def addRestrictionArea(self):
-        #inString = '''554632N 0140547E - 554609N 0140954E -
-        #554514N 0140819E - 554319N 0140919E -
-        #554325N 0141146E - 554204N 0140717E -
-        #554507N 0140358E - 554632N 0140547E'''
+
         inString = self.dlg.textEditLateral.toPlainText()
         inList = inString.split('-')
         noOfCoords = len(inList)
@@ -266,8 +266,8 @@ class PrecisionFlying:
         #        print coordinateArrayDD[i][1]
 
 
-        print coordinateArrayDMS
-        print coordinateArrayDD
+        #print coordinateArrayDMS
+        #print coordinateArrayDD
 
         #Skriv till aktivt lager
         #layer = iface.activeLayer()
@@ -288,6 +288,7 @@ class PrecisionFlying:
         #Hämta valt lager
         layers = self.iface.legendInterface().layers()
         selectedLayerIndex = self.dlg.comboBoxLayer.currentIndex()
+        self.globalLayerIndex = selectedLayerIndex
         selectedLayer = layers[selectedLayerIndex]
  
         iter = selectedLayer.getFeatures()
@@ -313,7 +314,7 @@ class PrecisionFlying:
             attrs = feature.attributes()
 
             # attrs is a list. It contains all the attribute values of this feature
-            print attrs
+            #print attrs
             currentID = attrs[0]
             if currentID >= highestID:
                 highestID = currentID
@@ -353,7 +354,9 @@ class PrecisionFlying:
         for layer in layers:
             layer_list.append(layer.name())
 
+        self.dlg.comboBoxLayer.clear()
         self.dlg.comboBoxLayer.addItems(layer_list)
+        self.dlg.comboBoxLayer.setCurrentIndex(self.globalLayerIndex)
         
         comboBoxTypeList = ["Restricted Area","Prohibited Area","Danger Area"]
         self.dlg.comboBoxType.clear()
