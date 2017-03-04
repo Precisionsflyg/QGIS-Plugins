@@ -260,7 +260,12 @@ class PFCCourse:
             return doesExistLoadedInLegend
             
         # Try to load layer if it doesn't exist in the legend
-        path = self.globalCourseDirectory + "\\" + lineLayerNameToCheck + ".shp"
+        pathname = lineLayerNameToCheck + ".shp"
+        path = os.path.join(self.globalCourseDirectory, pathname)
+        path = os.path.abspath(path)
+        print "FileWriter Path: ", path
+        
+        #path = self.globalCourseDirectory + "\\" + lineLayerNameToCheck + ".shp"
         #print path
         nameYouLike = lineLayerNameToCheck
         vlayer = QgsVectorLayer(path, nameYouLike, "ogr")
@@ -316,7 +321,12 @@ class PFCCourse:
             return doesExistLoadedInLegend
             
         # Try to load layer if it doesn't exist in the legend
-        path = self.globalCourseDirectory + "\\" + pointLayerNameToCheck + ".shp"
+        pathname = pointLayerNameToCheck + ".shp"
+        path = os.path.join(self.globalCourseDirectory, pathname)
+        path = os.path.abspath(path)
+        print "FileWriter Path: ", path
+        
+        #path = self.globalCourseDirectory + "\\" + pointLayerNameToCheck + ".shp"
         #print path
         nameYouLike = pointLayerNameToCheck
         vlayer = QgsVectorLayer(path, nameYouLike, "ogr")
@@ -334,7 +344,12 @@ class PFCCourse:
     def loadLineLayer(self, pointLayer):
         
         lineLayerName = pointLayer.name() + "_Lines"
-        path = self.globalCourseDirectory + "\\" + lineLayerName + ".shp"
+        pathname = lineLayerName + ".shp"
+        path = os.path.join(self.globalCourseDirectory, pathname)
+        path = os.path.abspath(path)
+        print "FileWriter Path: ", path
+        
+        #path = self.globalCourseDirectory + "\\" + lineLayerName + ".shp"
         nameYouLike = lineLayerName
         vlayer = QgsVectorLayer(path, nameYouLike, "ogr")
         QgsMapLayerRegistry.instance().addMapLayer(vlayer)
@@ -353,7 +368,12 @@ class PFCCourse:
             pointLayerNameToCheck = pointLayerNameToCheck.replace('CCW','CW')
 
         courseLayerName = pointLayerNameToCheck
-        path = self.globalCourseDirectory + "\\" + courseLayerName + ".shp"
+        pathname = courseLayerName + ".shp"
+        path = os.path.join(self.globalCourseDirectory, pathname)
+        path = os.path.abspath(path)
+        print "FileWriter Path: ", path
+        
+        #path = self.globalCourseDirectory + "\\" + courseLayerName + ".shp"
         nameYouLike = courseLayerName
         vlayer = QgsVectorLayer(path, nameYouLike, "ogr")
         QgsMapLayerRegistry.instance().addMapLayer(vlayer)
@@ -418,7 +438,12 @@ class PFCCourse:
         self.updateSettings()
         orderedList = self.getOrderedFeatureListFromLayer()
         
-        path = self.globalCourseDirectory + "\\" + self.selectedLayerGlobal.name() + ".txt"
+        pathname = self.selectedLayerGlobal.name() + ".txt"
+        path = os.path.join(self.globalCourseDirectory, pathname)
+        path = os.path.abspath(path)
+        print "Path: ", path
+
+        #path = self.globalCourseDirectory + "\\" + self.selectedLayerGlobal.name() + ".txt"
         output_file = open(path, 'w')
         line = '# Each record includes the following fields\n'
         unicode_line = line.encode('cp1252')
@@ -578,7 +603,10 @@ class PFCCourse:
         # 6. driver name for the output file
         coordinateSystem = QgsCoordinateReferenceSystem()
         coordinateSystem.createFromUserInput("EPSG:4326")
-        path = self.globalCourseDirectory + "\\" + self.selectedLayerGlobal.name() + "_Lines.shp"
+        pathname = self.selectedLayerGlobal.name() + "_Lines.shp"
+        path = os.path.join(self.globalCourseDirectory, pathname)
+        path = os.path.abspath(path)
+        print "FileWriter Path: ", path
         writer = QgsVectorFileWriter(path, "CP1250", fields, QGis.WKBLineString,
                                      coordinateSystem, "ESRI Shapefile")
 
@@ -721,7 +749,12 @@ class PFCCourse:
 
         coordinateSystem = QgsCoordinateReferenceSystem()
         coordinateSystem.createFromUserInput("EPSG:4326")
-        path = self.globalCourseDirectory + "\\" + pointLayerNameToCheck + ".shp"
+        pathname = pointLayerNameToCheck + ".shp"
+        path = os.path.join(self.globalCourseDirectory, pathname)
+        path = os.path.abspath(path)
+        print "Path: ", path
+        
+        #path = self.globalCourseDirectory + "\\" + pointLayerNameToCheck + ".shp"
         writer = QgsVectorFileWriter(path, "CP1250", fields, QGis.WKBPoint,
                                      coordinateSystem, "ESRI Shapefile")
 
@@ -1045,7 +1078,8 @@ class PFCCourse:
             #print self.selectedLayerGlobal
 
     def select_courses_directory(self):
-        courseDirectory = str(QFileDialog.getExistingDirectory(self.sdlg, "Select Directory", self.globalCourseDirectory))
+        #courseDirectory = str(QFileDialog.getExistingDirectory(self.sdlg, "Select Directory", self.globalCourseDirectory))
+        courseDirectory = unicode(QFileDialog.getExistingDirectory(self.sdlg, "Select Directory", self.globalCourseDirectory))
         #courseDirectory = QFileDialog.getOpenFileName(self.sdlg, "Choose file..")
         self.sdlg.lineEditDirectory.setText(courseDirectory)
     
