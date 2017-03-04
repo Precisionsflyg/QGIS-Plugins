@@ -68,6 +68,10 @@ class PFCObstacles:
         # TODO: We are going to let the user set this up in a future iteration
         self.toolbar = self.iface.addToolBar(u'PFCObstacles')
         self.toolbar.setObjectName(u'PFCObstacles')
+            
+        # Global layerindex
+        self.globalLayerIndex = 0
+
 
     # noinspection PyMethodMayBeStatic
     def tr(self, message):
@@ -160,7 +164,7 @@ class PFCObstacles:
 
     def convertDMS2DD(self, DMS):
         if DMS.endswith('N'):
-            print "Norr hittad, DMS: ", DMS
+            #print "Norr hittad, DMS: ", DMS
             lengthOfCoord = len(DMS)
             maxSliceIndex = lengthOfCoord -1
             DD = DMS[0:2]
@@ -172,11 +176,11 @@ class PFCObstacles:
         
             #Konvertera till decimalgrader
             decimalDegrees = dFloat + (mFloat / 60) + (sFloat / 3600)
-            print decimalDegrees
+            #print decimalDegrees
             return decimalDegrees
         
         elif DMS.endswith('S'):
-            print "Syd hittad, DMS: ", DMS
+            #print "Syd hittad, DMS: ", DMS
             lengthOfCoord = len(DMS)
             maxSliceIndex = lengthOfCoord -1
             DD = DMS[0:2]
@@ -188,12 +192,12 @@ class PFCObstacles:
         
             #Konvertera till decimalgrader
             decimalDegrees = -(dFloat + (mFloat / 60) + (sFloat / 3600))
-            print decimalDegrees
+            #print decimalDegrees
             return decimalDegrees
         
         elif DMS.endswith('E'):
             #Kontrollera att strängen innehåller 8 tecken...
-            print "Öst hittad, DMS: ", DMS
+            #print "Öst hittad, DMS: ", DMS
             lengthOfCoord = len(DMS)
             maxSliceIndex = lengthOfCoord -1
             DD = DMS[0:3]
@@ -205,11 +209,11 @@ class PFCObstacles:
         
             #Konvertera till decimalgrader
             decimalDegrees = dFloat + (mFloat / 60) + (sFloat / 3600)
-            print decimalDegrees
+            #print decimalDegrees
             return decimalDegrees
         
         elif DMS.endswith('W'):
-            print "Väst hittad, DMS: ", DMS
+            #print "Väst hittad, DMS: ", DMS
             lengthOfCoord = len(DMS)
             maxSliceIndex = lengthOfCoord -1
             DD = DMS[0:3]
@@ -221,7 +225,7 @@ class PFCObstacles:
         
             #Konvertera till decimalgrader
             decimalDegrees = -(dFloat + (mFloat / 60) + (sFloat / 3600))
-            print decimalDegrees
+            #print decimalDegrees
             return decimalDegrees
         
     def addObstacles(self):
@@ -233,6 +237,7 @@ class PFCObstacles:
         #Hämta valt lager
         layers = self.iface.legendInterface().layers()
         selectedLayerIndex = self.dlg.comboBoxLayer.currentIndex()
+        self.globalLayerIndex = selectedLayerIndex
         selectedLayer = layers[selectedLayerIndex]
  
             
@@ -288,7 +293,9 @@ class PFCObstacles:
         for layer in layers:
             layer_list.append(layer.name())
 
+        self.dlg.comboBoxLayer.clear()
         self.dlg.comboBoxLayer.addItems(layer_list)
+        self.dlg.comboBoxLayer.setCurrentIndex(self.globalLayerIndex)
         
         # show the dialog
         self.dlg.show()
