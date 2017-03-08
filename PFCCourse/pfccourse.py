@@ -397,6 +397,7 @@ class PFCCourse:
                         pass
                         #print "Wrong leg, skipping SC."
             else:
+                pass
                 #print "Wrong Layer?"
                 
         orderedList.sort(key=lambda x: x[2]) # Sort by third column (Number), unsafe?
@@ -426,6 +427,7 @@ class PFCCourse:
                     pass
                     #print "Other type (maybe SC), skipping"
             else:
+                pass
                 #print "Wrong Layer?"
             
         orderedList.sort(key=lambda x: x[2]) # Sort by Number
@@ -576,10 +578,10 @@ class PFCCourse:
             #updateCourseLines(self)
             return
         elif resultCode == 0:
-            #print "Layer does not exist!"
+            print "Layer does not exist!"
             #Lets go ahead and create a new file!
         elif resultCode == 99:
-            #print "Uh uh!"
+            print "Uh uh!"
             #Something went wrong, should we fix it?
             return
         resultCode = -1
@@ -611,7 +613,7 @@ class PFCCourse:
                                      coordinateSystem, "ESRI Shapefile")
 
         if writer.hasError() != QgsVectorFileWriter.NoError:
-            #print "Error when creating shapefile: ",  writer.errorMessage()
+            print "Error when creating shapefile: ",  writer.errorMessage()
 
         # Create FirstPart, CourseLine and LastPart for each leg.
         orderedList = self.getOrderedFeatureListFromLayer()
@@ -678,14 +680,14 @@ class PFCCourse:
         resultCode = self.doesLineLayerExist(self.selectedLayerGlobal)
         #print resultCode
         if resultCode == 2:
-            #print "Layer already exists in legend!"
+            print "Layer already exists in legend!"
         elif resultCode == 1:
             #print "Layer exists, but is not loaded (yet)!"
             self.loadLineLayer(self.selectedLayerGlobal)
         elif resultCode == 0:
-            #print "Layer does not exist!"
+            print "Layer does not exist!"
         elif resultCode == 99:
-            #print "Uh uh!"
+            print "Uh uh!"
         resultCode = -1
         
     def createReverseCourse(self):
@@ -706,10 +708,10 @@ class PFCCourse:
             #print "Wrong Layername?"
             return
         elif resultCode == 0:
-            #print "Layer does not exist!"
+            print "Layer does not exist!"
             #Lets go ahead and create a new file!
         elif resultCode == 99:
-            #print "Uh uh!"
+            print "Uh uh!"
             #Something went wrong, should we fix it?
             return
         resultCode = -1
@@ -759,7 +761,7 @@ class PFCCourse:
                                      coordinateSystem, "ESRI Shapefile")
 
         if writer.hasError() != QgsVectorFileWriter.NoError:
-            #print "Error when creating shapefile: ",  writer.errorMessage()
+            print "Error when creating shapefile: ",  writer.errorMessage()
 
         # Get an ordered list of SP, TP and FP - and reverse it
         orderedList = self.getOrderedFeatureListFromLayer()
@@ -847,16 +849,16 @@ class PFCCourse:
             #print "Wrong Layername?"
             return
         elif resultCode == 0:
-            #print "Layer does not exist!"
+            print "Layer does not exist!"
             #Lets go ahead and create a new file!
         elif resultCode == 99:
-            #print "Uh uh!"
+            print "Uh uh!"
             #Something went wrong, should we fix it?
             return
         resultCode = -1
         
     def updateCourseLines(self):
-        #print "Lets go ahead and update an existing CourseLineLayer"
+        print "Lets go ahead and update an existing CourseLineLayer"
 
     
     def createLinesBetweenPoints(self, startPoint, endPoint):
