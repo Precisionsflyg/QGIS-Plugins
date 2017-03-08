@@ -263,14 +263,14 @@ class PFCCourse:
         pathname = lineLayerNameToCheck + ".shp"
         path = os.path.join(self.globalCourseDirectory, pathname)
         path = os.path.abspath(path)
-        print "FileWriter Path: ", path
+        #print "FileWriter Path: ", path
         
         #path = self.globalCourseDirectory + "\\" + lineLayerNameToCheck + ".shp"
         #print path
         nameYouLike = lineLayerNameToCheck
         vlayer = QgsVectorLayer(path, nameYouLike, "ogr")
         if not vlayer.isValid():
-            print "Layer failed to load!"
+            #print "Layer failed to load!"
             vlayer = None
             return doesNotExist
         else:
@@ -293,10 +293,10 @@ class PFCCourse:
         
         pointLayerNameToCheck = pointLayer.name()
         intCheck = pointLayerNameToCheck.find(' CCW') # -1 if not found, otherwise index
-        print 'Found CCW: ', intCheck
+        #print 'Found CCW: ', intCheck
         if intCheck == -1: # Not found
             intCheck = pointLayerNameToCheck.find(' CW') # -1 if not found, otherwise index
-            print 'Found CW: ', intCheck
+            #print 'Found CW: ', intCheck
             if intCheck == -1: # Still not found
                 return wrongName
             else: # Found ClockWise course, let's search for a Counter ClockWise course
@@ -324,14 +324,14 @@ class PFCCourse:
         pathname = pointLayerNameToCheck + ".shp"
         path = os.path.join(self.globalCourseDirectory, pathname)
         path = os.path.abspath(path)
-        print "FileWriter Path: ", path
+        #print "FileWriter Path: ", path
         
         #path = self.globalCourseDirectory + "\\" + pointLayerNameToCheck + ".shp"
         #print path
         nameYouLike = pointLayerNameToCheck
         vlayer = QgsVectorLayer(path, nameYouLike, "ogr")
         if not vlayer.isValid():
-            print "Layer failed to load!"
+            #print "Layer failed to load!"
             vlayer = None
             return doesNotExist
         else:
@@ -347,7 +347,7 @@ class PFCCourse:
         pathname = lineLayerName + ".shp"
         path = os.path.join(self.globalCourseDirectory, pathname)
         path = os.path.abspath(path)
-        print "FileWriter Path: ", path
+        #print "FileWriter Path: ", path
         
         #path = self.globalCourseDirectory + "\\" + lineLayerName + ".shp"
         nameYouLike = lineLayerName
@@ -371,7 +371,7 @@ class PFCCourse:
         pathname = courseLayerName + ".shp"
         path = os.path.join(self.globalCourseDirectory, pathname)
         path = os.path.abspath(path)
-        print "FileWriter Path: ", path
+        #print "FileWriter Path: ", path
         
         #path = self.globalCourseDirectory + "\\" + courseLayerName + ".shp"
         nameYouLike = courseLayerName
@@ -379,25 +379,25 @@ class PFCCourse:
         QgsMapLayerRegistry.instance().addMapLayer(vlayer)
         
     def getOrderedListOfSCForLeg(self,leg):
-        print "Inne..."
+        #print "Inne..."
         orderedList = []
         iter = self.selectedLayerGlobal.getFeatures()
         for feature in iter:
             # fetch geometry
             geom = feature.geometry()
             if geom.type() == QGis.Point:
-                print feature.attribute('Category')
+                #print feature.attribute('Category')
                 if feature.attribute('Category') == 'SC':
                     #print feature.attribute('Leg')
                     typecastLeg = int(feature.attribute('Leg'))
                     if typecastLeg == leg:
                         orderedList.append(feature)
-                        print "Found Secret Checkpoint on leg: ", leg
+                        #print "Found Secret Checkpoint on leg: ", leg
                     else:
                         pass
-                        print "Wrong leg, skipping SC."
+                        #print "Wrong leg, skipping SC."
             else:
-                print "Wrong Layer?"
+                #print "Wrong Layer?"
                 
         orderedList.sort(key=lambda x: x[2]) # Sort by third column (Number), unsafe?
         
@@ -415,18 +415,18 @@ class PFCCourse:
             if geom.type() == QGis.Point:
                 if feature.attribute('Category') == 'SP':
                     startingPoint = feature
-                    print "Found Starting Point"
+                    #print "Found Starting Point"
                 elif feature.attribute('Category') == 'FP':
                     finishPoint = feature
-                    print "Found Finish Point"
+                    #print "Found Finish Point"
                 elif feature.attribute('Category') == 'TP':
                     orderedList.append(feature)
-                    print "Found TP" + str(feature.attribute('Number'))
+                    #print "Found TP" + str(feature.attribute('Number'))
                 else:
                     pass
                     #print "Other type (maybe SC), skipping"
             else:
-                print "Wrong Layer?"
+                #print "Wrong Layer?"
             
         orderedList.sort(key=lambda x: x[2]) # Sort by Number
         orderedList.insert(0, startingPoint)
@@ -441,7 +441,7 @@ class PFCCourse:
         pathname = self.selectedLayerGlobal.name() + ".txt"
         path = os.path.join(self.globalCourseDirectory, pathname)
         path = os.path.abspath(path)
-        print "Path: ", path
+        #print "Path: ", path
 
         #path = self.globalCourseDirectory + "\\" + self.selectedLayerGlobal.name() + ".txt"
         output_file = open(path, 'w')
@@ -524,7 +524,7 @@ class PFCCourse:
         leg = 1
         for feature in orderedList:
             currentFeatureIndex = feature.id()
-            print feature.attribute('Category')
+            #print feature.attribute('Category')
             if feature.attribute('Category') != 'FP':
                 point01 = feature.geometry().asPoint()
                 point02 = orderedList[currentOrderedListIndex+1].geometry().asPoint()
@@ -562,29 +562,29 @@ class PFCCourse:
         # Check if the linelayer already exists
         self.updateSettings()
         resultCode = self.doesLineLayerExist(self.selectedLayerGlobal)
-        print resultCode
+        #print resultCode
         if resultCode == 2:
-            print "Layer already exists in legend!"
+            #print "Layer already exists in legend!"
             self.iface.messageBar().pushMessage("Error", "Courselines for this course already exists! Backup/Delete Shapefile first, before you can create new courselines!", level=QgsMessageBar.CRITICAL, duration=30)
             #We should update the CourseLineLayer instead of creating a new file
             #updateCourseLines(self)
             return
         elif resultCode == 1:
-            print "Layer exists, but is not loaded (yet)!"
+            #print "Layer exists, but is not loaded (yet)!"
             #Load the layer first, then update the CourseLineLayer instead of creating a new file
             self.loadLineLayer(self.selectedLayerGlobal)
             #updateCourseLines(self)
             return
         elif resultCode == 0:
-            print "Layer does not exist!"
+            #print "Layer does not exist!"
             #Lets go ahead and create a new file!
         elif resultCode == 99:
-            print "Uh uh!"
+            #print "Uh uh!"
             #Something went wrong, should we fix it?
             return
         resultCode = -1
 
-        print "Lets go ahead and create a new file"
+        #print "Lets go ahead and create a new file"
         # define fields for feature attributes. A QgsFields object is needed
         fields = QgsFields()
         fields.append(QgsField("Category", QVariant.String))
@@ -606,12 +606,12 @@ class PFCCourse:
         pathname = self.selectedLayerGlobal.name() + "_Lines.shp"
         path = os.path.join(self.globalCourseDirectory, pathname)
         path = os.path.abspath(path)
-        print "FileWriter Path: ", path
+        #print "FileWriter Path: ", path
         writer = QgsVectorFileWriter(path, "CP1250", fields, QGis.WKBLineString,
                                      coordinateSystem, "ESRI Shapefile")
 
         if writer.hasError() != QgsVectorFileWriter.NoError:
-            print "Error when creating shapefile: ",  writer.errorMessage()
+            #print "Error when creating shapefile: ",  writer.errorMessage()
 
         # Create FirstPart, CourseLine and LastPart for each leg.
         orderedList = self.getOrderedFeatureListFromLayer()
@@ -619,7 +619,7 @@ class PFCCourse:
         for feature in orderedList:
             currentFeatureIndex = feature.id()
             if feature.attribute('Category') != 'FP':
-                print "Leg: ", feature.attribute('Leg')
+                #print "Leg: ", feature.attribute('Leg')
                 circleRadius = 2500/2 # 1.35NM / 10mm on map
                 startPoint = feature.geometry().asPoint()
                 endPoint = orderedList[currentOrderedListIndex+1].geometry().asPoint()
@@ -631,9 +631,9 @@ class PFCCourse:
                                                                                        bearing)
                 bearing = self.calculateBearing(startPoint,courseLineStartPoint)
                 distance = self.haversinePoints(startPoint,courseLineStartPoint)
-                print "First Part"
-                print "startPoint: ", startPoint, "courseLineStartPoint: ", courseLineStartPoint
-                print "Distance: ", distance, "Bearing: ", bearing
+                #print "First Part"
+                #print "startPoint: ", startPoint, "courseLineStartPoint: ", courseLineStartPoint
+                #print "Distance: ", distance, "Bearing: ", bearing
                 # Add FirstPart
                 fet = QgsFeature()
                 fet.setGeometry(QgsGeometry.fromPolyline([startPoint,courseLineStartPoint]))
@@ -642,15 +642,15 @@ class PFCCourse:
 
                 # Start with LastPart
                 reciprocalBearing = self.calculateBearing(endPoint,startPoint)
-                print "reciprocalBearing: ", reciprocalBearing
+                #print "reciprocalBearing: ", reciprocalBearing
                 courseLineEndPoint = self.createPointWithDistanceAndBearingFromPoint(endPoint,
                                                                                        circleRadius,
                                                                                        reciprocalBearing)
                 distance = self.haversinePoints(courseLineEndPoint,endPoint)
                 bearing = self.calculateBearing(courseLineEndPoint,endPoint)
-                print "Last Part"
-                print "courseLineEndPoint: ", courseLineEndPoint, "endPoint: ", endPoint
-                print "Distance: ", distance, "Bearing: ", bearing
+                #print "Last Part"
+                #print "courseLineEndPoint: ", courseLineEndPoint, "endPoint: ", endPoint
+                #print "Distance: ", distance, "Bearing: ", bearing
                 # Add LastPart
                 fet = QgsFeature()
                 fet.setGeometry(QgsGeometry.fromPolyline([courseLineEndPoint,endPoint]))
@@ -660,9 +660,9 @@ class PFCCourse:
                 # Start with CourseLine
                 distance = self.haversinePoints(courseLineStartPoint,courseLineEndPoint)
                 bearing = self.calculateBearing(courseLineStartPoint,courseLineEndPoint)
-                print "CourseLine"
-                print "courseLineStartPoint: ", courseLineStartPoint, "courseLineEndPoint: ", courseLineEndPoint
-                print "Distance: ", distance, "Bearing: ", bearing
+                #print "CourseLine"
+                #print "courseLineStartPoint: ", courseLineStartPoint, "courseLineEndPoint: ", courseLineEndPoint
+                #print "Distance: ", distance, "Bearing: ", bearing
                 # Add CourseLine
                 fet = QgsFeature()
                 fet.setGeometry(QgsGeometry.fromPolyline([courseLineStartPoint,courseLineEndPoint]))
@@ -676,45 +676,45 @@ class PFCCourse:
 
         # Check if the linelayer already exists
         resultCode = self.doesLineLayerExist(self.selectedLayerGlobal)
-        print resultCode
+        #print resultCode
         if resultCode == 2:
-            print "Layer already exists in legend!"
+            #print "Layer already exists in legend!"
         elif resultCode == 1:
-            print "Layer exists, but is not loaded (yet)!"
+            #print "Layer exists, but is not loaded (yet)!"
             self.loadLineLayer(self.selectedLayerGlobal)
         elif resultCode == 0:
-            print "Layer does not exist!"
+            #print "Layer does not exist!"
         elif resultCode == 99:
-            print "Uh uh!"
+            #print "Uh uh!"
         resultCode = -1
         
     def createReverseCourse(self):
         # Check if a reverse course already exists
         self.updateSettings()
         resultCode = self.doesReverseCourseLayerExist(self.selectedLayerGlobal)
-        print resultCode
+        #print resultCode
         if resultCode == 2:
-            print "Layer already exists in legend!"
+            #print "Layer already exists in legend!"
             self.iface.messageBar().pushMessage("Error", "A reverse course for this course already exists! Backup/Delete Shapefile first, before you can create a new reverse course!", level=QgsMessageBar.CRITICAL, duration=30)
             return
         elif resultCode == 1:
-            print "Layer exists, but is not loaded (yet)!"
+            #print "Layer exists, but is not loaded (yet)!"
             #Load the layer first, then update the CourseLineLayer instead of creating a new file
             self.loadCourseLayer(self.selectedLayerGlobal)
             return
         elif resultCode == 3:
-            print "Wrong Layername?"
+            #print "Wrong Layername?"
             return
         elif resultCode == 0:
-            print "Layer does not exist!"
+            #print "Layer does not exist!"
             #Lets go ahead and create a new file!
         elif resultCode == 99:
-            print "Uh uh!"
+            #print "Uh uh!"
             #Something went wrong, should we fix it?
             return
         resultCode = -1
 
-        print "Lets go ahead and create a new file"
+        #print "Lets go ahead and create a new file"
         # define fields for feature attributes. A QgsFields object is needed
         fields = QgsFields()
         fields.append(QgsField("Category", QVariant.String))
@@ -752,14 +752,14 @@ class PFCCourse:
         pathname = pointLayerNameToCheck + ".shp"
         path = os.path.join(self.globalCourseDirectory, pathname)
         path = os.path.abspath(path)
-        print "Path: ", path
+        #print "Path: ", path
         
         #path = self.globalCourseDirectory + "\\" + pointLayerNameToCheck + ".shp"
         writer = QgsVectorFileWriter(path, "CP1250", fields, QGis.WKBPoint,
                                      coordinateSystem, "ESRI Shapefile")
 
         if writer.hasError() != QgsVectorFileWriter.NoError:
-            print "Error when creating shapefile: ",  writer.errorMessage()
+            #print "Error when creating shapefile: ",  writer.errorMessage()
 
         # Get an ordered list of SP, TP and FP - and reverse it
         orderedList = self.getOrderedFeatureListFromLayer()
@@ -791,7 +791,7 @@ class PFCCourse:
                          feature.attribute('LblLong'), feature.attribute('LblRot'), bearing, distance ])
                 fet.setAttributes(attrs)
                 #fet.setGeometry(feature.geometry())
-                print 'fet.attribute Category: ', fet.attribute('Category')
+                #print 'fet.attribute Category: ', fet.attribute('Category')
                 writer.addFeature(fet)
                 
                 # Add Secret Checkpoints for this leg
@@ -833,30 +833,30 @@ class PFCCourse:
         del writer
 
         resultCode = self.doesReverseCourseLayerExist(self.selectedLayerGlobal)
-        print resultCode
+        #print resultCode
         if resultCode == 2:
-            print "Layer already exists in legend!"
+            #print "Layer already exists in legend!"
             self.iface.messageBar().pushMessage("Error", "A reverse course for this course already exists! Backup/Delete Shapefile first, before you can create a new reverse course!", level=QgsMessageBar.CRITICAL, duration=30)
             return
         elif resultCode == 1:
-            print "Layer exists, but is not loaded (yet)!"
+            #print "Layer exists, but is not loaded (yet)!"
             #Load the layer first, then update the CourseLineLayer instead of creating a new file
             self.loadCourseLayer(self.selectedLayerGlobal)
             return
         elif resultCode == 3:
-            print "Wrong Layername?"
+            #print "Wrong Layername?"
             return
         elif resultCode == 0:
-            print "Layer does not exist!"
+            #print "Layer does not exist!"
             #Lets go ahead and create a new file!
         elif resultCode == 99:
-            print "Uh uh!"
+            #print "Uh uh!"
             #Something went wrong, should we fix it?
             return
         resultCode = -1
         
     def updateCourseLines(self):
-        print "Lets go ahead and update an existing CourseLineLayer"
+        #print "Lets go ahead and update an existing CourseLineLayer"
 
     
     def createLinesBetweenPoints(self, startPoint, endPoint):
@@ -899,7 +899,7 @@ class PFCCourse:
         leg = 1
         for feature in orderedList:
             currentFeatureIndex = feature.id()
-            print feature.attribute('Category')
+            #print feature.attribute('Category')
             if feature.attribute('Category') != 'FP':
                 point01 = feature.geometry().asPoint()
                 point02 = orderedList[currentOrderedListIndex+1].geometry().asPoint()
@@ -938,7 +938,7 @@ class PFCCourse:
         leg = 1
         for feature in orderedList:
             currentFeatureIndex = feature.id()
-            print feature.attribute('Category')
+            #print feature.attribute('Category')
             if feature.attribute('Category') != 'FP':
                 # Calculate Distance and Bearing for the leg as usual!
                 point01 = feature.geometry().asPoint()
@@ -959,7 +959,7 @@ class PFCCourse:
                         for sc in listSC:
                             # Calculate distance from start of leg
                             scdist = self.haversinePoints(point01,sc.geometry().asPoint())
-                            print "scdist: ", scdist
+                            #print "scdist: ", scdist
                             scdistmeters = scdist * 1852
                             # Create a point ON the line
                             newSCPoint = self.createPointWithDistanceAndBearingFromPoint(point01,scdistmeters,calcOutbound)
@@ -981,7 +981,7 @@ class PFCCourse:
         distance = 1.0 * 1852 # In metres
         bearing = 90.575
         returnedPoint = self.createPointWithDistanceAndBearingFromPoint(startPoint, distance, bearing)
-        print returnedPoint
+        #print returnedPoint
     
     def initGui(self):
         """Create the menu entries and toolbar icons inside the QGIS GUI."""
